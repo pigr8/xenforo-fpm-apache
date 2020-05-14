@@ -23,6 +23,7 @@ RUN set -ex; \
 		gmp-dev \
 		freetype-dev \
 		imagemagick-dev \
+		libmcrypt-dev \
 		libjpeg-turbo-dev \
 		libpng-dev \
 		libzip-dev \
