@@ -25,7 +25,6 @@ RUN set -ex; \
 		imagemagick-dev \
 		libjpeg-turbo-dev \
 		libpng-dev \
-		libmcrypt-dev \
 		libzip-dev \
 		pcre-dev \
 	; \
@@ -34,7 +33,6 @@ RUN set -ex; \
 	docker-php-ext-install -j "$(nproc)" \
 		bcmath \
 		iconv \
-		mcrypt \
 		exif \
 		gd \
 		gmp \
@@ -43,8 +41,8 @@ RUN set -ex; \
 		opcache \
 		zip \
 	; \
-	pecl install apcu imagick; \
-	docker-php-ext-enable apcu imagick; \
+	pecl install mcrypt apcu imagick; \
+	docker-php-ext-enable mcrypt apcu imagick; \
 	\
 	runDeps="$( \
 		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/php/extensions \
@@ -93,8 +91,8 @@ RUN sed -i 's/:65534:65534:nobody:\/:/:1000:100:nobody:\/var\/www:/g' /etc/passw
 COPY config/httpd.conf /etc/apache2/
 
 # Set timezone
-RUN ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone \
-    && printf '[PHP]\ndate.timezone = "%s"\n', ${TIMEZONE} > /usr/local/etc/php/conf.d/tzone.ini \
+RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone \
+    && printf '[PHP]\ndate.timezone = "%s"\n', ${TZ} > /usr/local/etc/php/conf.d/tzone.ini \
     && "date"
 
 # Setting up the Container and Supervisor
